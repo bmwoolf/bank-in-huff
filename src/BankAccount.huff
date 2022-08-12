@@ -1,0 +1,59 @@
+/* Interface */
+#define function deposit(uint256) returns ()
+#define function wire(address,uint256) returns (bool)
+#define function withdraw(uint256) returns (uint256)
+#define function getBalance() view returns (uint256)
+
+/* Storage Layout */
+#define constant MASK_ADDR = 0xffffffffffffffffffffffffffffffffffffffff
+
+/* Storage Slots */
+#define constant USD_ADDRESS = FREE_STORAGE_POINTER() // how do i optimize this?
+
+/* Events */
+#define event Deposit(address,uint256)
+#define event Wire(address,address,uint256)
+#define event Withdraw(address,uint256)
+
+/* Methods */
+#define macro CONSTRUCTOR() = takes(0) returns (0) {
+    // Set msg.sender as the owner of the contract.
+    OWNABLE_CONSTRUCTOR()
+}
+
+#define macro DEPOSIT() = takes(0) returns(0) {
+    0x04 calldataload   // [value]
+    [VALUE_LOCATION]    // [ptr, value]
+    sstore              // []
+}
+
+#define macro WITHDRAW(amount) = takes(0) returns(0) {
+    // require that it is the owner of the account
+}
+
+#define macro WIRE(to, amount) = takes(0) returns(0) {
+    // require that it is the owner of the account
+}
+
+#define macro GET_BALANCE() = takes(0) returns(0) {
+    
+}
+
+#define macro MAIN() = takes (0) returns (0) {
+    // Identify which function is being called.
+    0x00 calldataload 0xE0 shr
+    dup1 0x55241077 eq deposit jumpi
+    dup1 0xc32cefa1 eq wire jumpi
+    dup1 0x2e1a7d4d eq withdraw jumpi
+    dup1 0x12065fe0 eq getBalance jumpi
+
+    deposit:
+        DEPOSIT()
+    wire:
+        WIRE()
+    withdraw:
+        WITHDRAW()
+    getBalance:
+        GET_BALANCE()
+
+}
