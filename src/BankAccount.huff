@@ -9,6 +9,7 @@
 
 /* Storage Slots */
 #define constant USD_ADDRESS = FREE_STORAGE_POINTER() // how do i optimize this?
+#define constant OWNER_ADDRESS = FREE_STORAGE_POINTER()
 
 /* Events */
 #define event Deposit(address,uint256)
@@ -18,7 +19,7 @@
 /* Methods */
 #define macro CONSTRUCTOR() = takes(0) returns (0) {
     // Set msg.sender as the owner of the contract.
-    OWNABLE_CONSTRUCTOR()
+    caller [OWNER_ADDRESS] sstore
 }
 
 #define macro DEPOSIT() = takes(0) returns(0) {
