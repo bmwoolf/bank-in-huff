@@ -30,19 +30,38 @@
 
 #define macro WITHDRAW(amount) = takes(0) returns(0) {
     // require that it is the owner of the account
+    ONLY_OWNER()
 }
 
 #define macro WIRE(to, amount) = takes(0) returns(0) {
     // require that it is the owner of the account
+    ONLY_OWNER()
 }
 
 #define macro GET_BALANCE() = takes(0) returns(0) {
-    
+    NO_VALUE_CHECK(returndatasize)
 }
 
+
+/* Utils */
+#define macro NO_VALUE_CHECK(zero) = takes(0) returns (0) {
+    callvalue iszero valueCheck jumpi
+        <zero> <zero> revert // instead of using 0x00, use <zero>
+    valueCheck: 
+}
+
+
+/* Modifiers */
+#define macro ONLY_OWNER() = takes(0) returns(0) {
+    [OWNER_ADDRESS] sload caller eq is_owner jumpi
+        <zero> <zero> revert
+    is_owner:
+}
+
+/* Main jump table for the contract */
 #define macro MAIN() = takes (0) returns (0) {
     // Identify which function is being called.
-    0x00 calldataload 0xE0 shr
+    <zero> calldataload 0xE0 shr
     dup1 0x55241077 eq deposit jumpi
     dup1 0xc32cefa1 eq wire jumpi
     dup1 0x2e1a7d4d eq withdraw jumpi
