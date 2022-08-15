@@ -1,7 +1,7 @@
 /* Interface */
-#define function deposit(uint256) returns ()
-#define function wire(address,uint256) returns (bool)
-#define function withdraw(uint256) returns (uint256)
+#define function deposit(uint256) payable returns ()
+#define function wire(address,uint256) payable returns (bool)
+#define function withdraw(uint256) payable returns (uint256)
 #define function getBalance() view returns (uint256)
 
 /* Storage Layout */
@@ -22,24 +22,24 @@
     caller [OWNER_ADDRESS] sstore
 }
 
-#define macro DEPOSIT() = takes(0) returns(0) {
+#define macro DEPOSIT(amount) = takes(1) returns(0) {
     0x04 calldataload   // [value]
-    [VALUE_LOCATION]    // [ptr, value]
-    sstore              // []
 }
 
-#define macro WITHDRAW(amount) = takes(0) returns(0) {
+#define macro WITHDRAW(amount) = takes(1) returns(0) {
     // require that it is the owner of the account
     ONLY_OWNER()
+    // how do we track ether in huff
 }
 
-#define macro WIRE(to, amount) = takes(0) returns(0) {
+#define macro WIRE(to, amount) = takes(2) returns(0) {
     // require that it is the owner of the account
     ONLY_OWNER()
 }
 
 #define macro GET_BALANCE() = takes(0) returns(0) {
     NO_VALUE_CHECK(returndatasize)
+    // how do i return the ether value?
 }
 
 
@@ -47,7 +47,7 @@
 #define macro NO_VALUE_CHECK(zero) = takes(0) returns (0) {
     callvalue iszero valueCheck jumpi
         <zero> <zero> revert // instead of using 0x00, use <zero>
-    valueCheck: 
+    valueCheck:
 }
 
 
@@ -75,5 +75,4 @@
         WITHDRAW()
     getBalance:
         GET_BALANCE()
-
 }
