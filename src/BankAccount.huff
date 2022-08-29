@@ -10,6 +10,7 @@
 /* Storage Slots */
 #define constant USD_ADDRESS = FREE_STORAGE_POINTER() // how do i optimize this?
 #define constant OWNER_ADDRESS = FREE_STORAGE_POINTER()
+#define constant ADDRESSES = FREE_STORAGE_POINTER()
 
 /* Events */
 #define event Deposit(address,uint256)
@@ -29,12 +30,15 @@
 #define macro WITHDRAW(amount) = takes(1) returns(0) {
     // require that it is the owner of the account
     ONLY_OWNER()
-    // how do we track ether in huff
+    // call opcode transferring from contract to individual
 }
 
 #define macro WIRE(to, amount) = takes(2) returns(0) {
     // require that it is the owner of the account
     ONLY_OWNER()
+    // call opcode transferring from individual to individual
+        // what actually makes this different than just sending the money from wallet to wallet?
+            // ensuring that it is the correct one?
 }
 
 #define macro GET_BALANCE() = takes(0) returns(0) {
