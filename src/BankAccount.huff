@@ -8,7 +8,7 @@
 #define constant MASK_ADDR = 0xffffffffffffffffffffffffffffffffffffffff
 
 /* Storage Slots */
-#define constant USD_ADDRESS = FREE_STORAGE_POINTER() // how do i optimize this?
+#define constant USD_ADDRESS = FREE_STORAGE_POINTER() // access these from sloads
 #define constant OWNER_ADDRESS = FREE_STORAGE_POINTER()
 #define constant ADDRESSES = FREE_STORAGE_POINTER()
 
@@ -38,17 +38,21 @@
     // call opcode transferring from contract to individual
 }
 
-#define macro WIRE(to, amount) = takes(2) returns(0) {
+#define macro WIRE(to, amount) = takes(2) returns(0) { // are the parameters already stored in memory?
     ONLY_OWNER()
+    <to> mstore
+    <amount> mstore
 
-    0x04 calldataload // [to] 
+
+    0x04 calldataload // [to]
     0x20 calldataload // [to, amount]
-    <zero> to <zero> <zero> <zero> <zero> <zero> call
+    // <zero> to <zero> <zero> <zero> <zero> <zero> call
+    0x00 0x20 0x00 0x00 0x00 0x00 0x00 call
 
     // Wire(address,address,uint256)
     caller
-    to // need to mload into memory
-    amount // need to mload into memory
+    0x20 // to
+    0x40 // amount
     [WIRE_SIG]
     log2
 }
@@ -62,7 +66,7 @@
 /* Utils */
 #define macro NO_VALUE_CHECK(zero) = takes(0) returns (0) {
     callvalue iszero valueCheck jumpi
-        <zero> <zero> revert // instead of using 0x00, use <zero>
+        <zero> <zero> revert
     valueCheck:
 }
 
@@ -71,7 +75,7 @@
 #define macro ONLY_OWNER() = takes(0) returns(0) {
     [OWNER_ADDRESS] sload caller eq is_owner jumpi
         <zero> <zero> revert
-    is_owner:
+    is_owner: // returns out and continues the function execution
 }
 
 /* Main jump table for the contract */
