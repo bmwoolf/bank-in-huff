@@ -17,6 +17,11 @@
 #define event Wire(address,address,uint256)
 #define event Withdraw(address,uint256)
 
+/* Event Signatures */
+#define constant DEPOSIT_SIG = 0x47e7ef24b3022e382e65b1298581281f0ae273ac4f76464efcf5b06769264f2f
+#define constant WIRE_SIG = 0xdbb338c7606de3f52f73ed8c0062346e93bacb183eb366c630d2a72af9ee96d3
+#define constant WITHDRAW_SIG = 0xf3fef3a3f44f9c277339b67d54f015748bd8d6b77a985b0ab6e71126b018c34a
+
 /* Methods */
 #define macro CONSTRUCTOR() = takes(0) returns (0) {
     // Set msg.sender as the owner of the contract.
