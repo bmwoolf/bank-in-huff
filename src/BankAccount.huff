@@ -34,11 +34,20 @@
 }
 
 #define macro WIRE(to, amount) = takes(2) returns(0) {
-    // require that it is the owner of the account
-    ONLY_OWNER()
-    // call opcode transferring from individual to individual
-        // what actually makes this different than just sending the money from wallet to wallet?
-            // ensuring that it is the correct one?
+    // funtionSig, to, amount
+    // 00 00 00 00 | 00 00 00 00 00 00 00 00 .. 28
+
+    // 0000000000 00 00 00 00 00 00 00 .. 28 || f2 8d 0s as o4 ... 32 || 0e wk rs fs fg ... 32
+
+    // 0x04 calldataload // [to] 
+    // // require that it is the owner of the account
+    // ONLY_OWNER()
+    // // call opcode transferring from individual to individual
+    //     // what actually makes this different than just sending the money from wallet to wallet?
+    //         // ensuring that it is the correct one?
+    // 0x00 call 
+
+    // Wire(address,address,uint256)
 }
 
 #define macro GET_BALANCE() = takes(0) returns(0) {
@@ -49,9 +58,9 @@
 
 /* Utils */
 #define macro NO_VALUE_CHECK(zero) = takes(0) returns (0) {
-    callvalue iszero valueCheck jumpi
-        <zero> <zero> revert // instead of using 0x00, use <zero>
-    valueCheck:
+    // callvalue iszero valueCheck jumpi
+    //     <zero> <zero> revert // instead of using 0x00, use <zero>
+    // valueCheck:
 }
 
 
@@ -65,18 +74,18 @@
 /* Main jump table for the contract */
 #define macro MAIN() = takes (0) returns (0) {
     // Identify which function is being called.
-    <zero> calldataload 0xE0 shr
-    dup1 0x55241077 eq deposit jumpi
-    dup1 0xc32cefa1 eq wire jumpi
-    dup1 0x2e1a7d4d eq withdraw jumpi
-    dup1 0x12065fe0 eq getBalance jumpi
+    // <zero> calldataload 0xE0 shr
+    // dup1 0x55241077 eq deposit jumpi
+    // dup1 0xc32cefa1 eq wire jumpi
+    // dup1 0x2e1a7d4d eq withdraw jumpi
+    // dup1 0x12065fe0 eq getBalance jumpi
 
-    deposit:
-        DEPOSIT()
-    wire:
-        WIRE()
-    withdraw:
-        WITHDRAW()
-    getBalance:
-        GET_BALANCE()
+    // deposit:
+    //     DEPOSIT()
+    // wire:
+    //     WIRE()
+    // withdraw:
+    //     WITHDRAW()
+    // getBalance:
+    //     GET_BALANCE()
 }
