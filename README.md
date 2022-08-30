@@ -1,5 +1,5 @@
 # Bank Account Smart Contract in Huff
-A simple set of contracts to replace a whole bank
+A simple set of contracts to replace a whole bank. Should handle ETH and USDC
 
 ## Questions
 - how does Huff handle storing/accessing ETH? ERC20's are pretty straightforward with storage slots
