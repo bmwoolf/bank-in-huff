@@ -46,8 +46,8 @@
 
     0x04 calldataload // [to]
     0x20 calldataload // [to, amount]
-    // <zero> to <zero> <zero> <zero> <zero> <zero> call
-    0x00 0x20 0x00 0x00 0x00 0x00 0x00 call
+    <zero> 0x20 <zero> <zero> <zero> <zero> <zero> call
+    // 0x00 0x20 0x00 0x00 0x00 0x00 0x00 call
 
     // Wire(address,address,uint256)
     caller
