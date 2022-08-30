@@ -46,6 +46,11 @@
     call <zero> to <zero> <zero> <zero> <zero> <zero>
     
     // Wire(address,address,uint256)
+    caller
+    to // need to mload into memory
+    amount // need to mload into memory
+    [WIRE_SIG]
+    log2
 }
 
 #define macro GET_BALANCE() = takes(0) returns(0) {
