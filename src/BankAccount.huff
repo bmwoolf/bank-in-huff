@@ -38,21 +38,26 @@
     // call opcode transferring from contract to individual
 }
 
-#define macro WIRE(to, amount) = takes(2) returns(0) { // are the parameters already stored in memory?
+// You don't really need this macro, same thing as just sending ETH to another wallet. More for learning
+#define macro WIRE(to) = takes(2) returns(0) { // are the parameters already stored in memory?
     ONLY_OWNER()
-    <to> mstore
-    <amount> mstore
+    <to> mstore      // 20 bytes, but not sure if it gets 32 bytes-- like 00000address
 
-
-    0x04 calldataload // [to]
-    0x20 calldataload // [to, amount]
-    <zero> 0x20 <zero> <zero> <zero> <zero> <zero> call
+    push1 0x00 //retSize
+    push1 0x00 //retOffset
+    push1 0x20 //argsSize
+    push1 0x00 //argsOffset
+    push1 0x00 //value
+    push20 <to> //dup7 //address
+    push2 0xFFFF //gas
+    call
+    
+    // <zero> 0x20 <zero> <zero> <zero> <zero> <zero> call
     // 0x00 0x20 0x00 0x00 0x00 0x00 0x00 call
 
     // Wire(address,address,uint256)
     caller
-    0x20 // to
-    0x40 // amount
+    0x20 // to- would this be 0x00?
     [WIRE_SIG]
     log2
 }
