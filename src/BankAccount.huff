@@ -34,15 +34,12 @@
 }
 
 #define macro WIRE(to, amount) = takes(2) returns(0) {
+    ONLY_OWNER()
 
     0x04 calldataload // [to] 
-    // // require that it is the owner of the account
-    ONLY_OWNER()
-    // // call opcode transferring from individual to individual
-    //     // what actually makes this different than just sending the money from wallet to wallet?
-    //         // ensuring that it is the correct one?
-    // 0x00 call 
-
+    0x20 calldataload // [to, amount]
+    call <zero> to <zero> <zero> <zero> <zero> <zero>
+    
     // Wire(address,address,uint256)
 }
 
