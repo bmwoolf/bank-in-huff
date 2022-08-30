@@ -43,8 +43,8 @@
 
     0x04 calldataload // [to] 
     0x20 calldataload // [to, amount]
-    call <zero> to <zero> <zero> <zero> <zero> <zero>
-    
+    <zero> to <zero> <zero> <zero> <zero> <zero> call
+
     // Wire(address,address,uint256)
     caller
     to // need to mload into memory
