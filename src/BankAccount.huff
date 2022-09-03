@@ -36,7 +36,7 @@
     callvalue
     log2
 }
-/// smart contract (bank account) -> personal wallet
+
 /// @dev withdraw money from the  bank account
 /// @param amount the amount of ETH to pull out in wei
 #define macro WITHDRAW(amount) = takes(1) returns(0) {
