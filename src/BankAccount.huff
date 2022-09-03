@@ -41,7 +41,7 @@
 /// @param amount the amount of ETH to pull out in wei
 #define macro WITHDRAW(amount) = takes(1) returns(0) {
     ONLY_OWNER()
-    
+
     push1 0x00   // retSize
     push1 0x00   // retOffset
     push1 0x20   // argsSize
@@ -108,8 +108,8 @@
 #define macro MAIN() = takes (0) returns (0) {
     // Identify which function is being called.
     // <zero> calldataload 0xE0 shr // causing errors "Unmatched Jump Table"
-    dup1 0x55241077 eq deposit jumpi
-    dup1 0xc32cefa1 eq wire jumpi
+    dup1 0xd0e30db0 eq deposit jumpi
+    dup1 0xf6487d8c eq wire jumpi
     dup1 0x2e1a7d4d eq withdraw jumpi
     dup1 0x12065fe0 eq getBalance jumpi
 
