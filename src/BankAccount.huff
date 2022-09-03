@@ -4,11 +4,8 @@
 #define function withdraw(uint256) payable returns (uint256)
 #define function getBalance() view returns (uint256)
 
-/* Storage Layout */
-#define constant MASK_ADDR = 0xffffffffffffffffffffffffffffffffffffffff
-
 /* Storage Slots */
-#define constant USD_ADDRESS = FREE_STORAGE_POINTER() // access these from sloads
+#define constant USD_ADDRESS = FREE_STORAGE_POINTER()
 #define constant OWNER_ADDRESS = FREE_STORAGE_POINTER()
 #define constant ADDRESSES = FREE_STORAGE_POINTER()
 
@@ -22,14 +19,15 @@
 #define constant WIRE_SIG = 0xdbb338c7606de3f52f73ed8c0062346e93bacb183eb366c630d2a72af9ee96d3
 #define constant WITHDRAW_SIG = 0xf3fef3a3f44f9c277339b67d54f015748bd8d6b77a985b0ab6e71126b018c34a
 
+
 /* Methods */
 #define macro CONSTRUCTOR() = takes(0) returns (0) {
-    // Set msg.sender as the owner of the contract.
+    // Set msg.sender as the owner of the contract
     caller [OWNER_ADDRESS] sstore
 }
 
-/// @dev deposit money into the smart contract
-/// @notice does not have only_owner modifier, allows anyone to deposit into an account, like a bank
+/// @dev Deposit money into the smart contract
+/// @notice Does not have only_owner modifier, allows anyone to deposit into an account, like a bank
 #define macro DEPOSIT() = takes(0) returns(0) {
     // emit deposit event
     caller
@@ -37,8 +35,8 @@
     log2
 }
 
-/// @dev withdraw money from the  bank account
-/// @param amount the amount of ETH to pull out in wei
+/// @dev Withdraw money from the  bank account
+/// @param amount The amount of ETH to pull out in wei
 #define macro WITHDRAW(amount) = takes(1) returns(0) {
     ONLY_OWNER()
 
@@ -57,11 +55,10 @@
     log2
 }
 
-// pass in the contract address of the receiver bank account
+/// @param to The contract address of the receiver's bank account
 #define macro WIRE(to) = takes(1) returns(0) {
     ONLY_OWNER()
-    // need to access msg.value
-    <to> mstore  // smart contract representing the receiver's bank account
+    <to> mstore
 
     push1 0x00   // retSize
     push1 0x00   // retOffset
@@ -74,11 +71,12 @@
 
     // emit wire event
     caller
-    0x20
+    <to>
     log2
 }
 
-/// @dev returns the amount of ETH in the contract
+/// @dev Gets current balance of ETH in the bank account
+/// @return The amount of ETH
 #define macro GET_BALANCE() = takes(0) returns(0) {
     NO_VALUE_CHECK(returndatasize)
 
@@ -106,7 +104,6 @@
 
 /* Main jump table for the contract */
 #define macro MAIN() = takes (0) returns (0) {
-    // Identify which function is being called.
     // <zero> calldataload 0xE0 shr // causing errors "Unmatched Jump Table"
     dup1 0xd0e30db0 eq deposit jumpi
     dup1 0xf6487d8c eq wire jumpi
