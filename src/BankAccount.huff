@@ -38,24 +38,23 @@
     // call opcode transferring from contract to individual
 }
 
-// You don't really need this macro, same thing as just sending ETH to another wallet. More for learning
-#define macro WIRE(to) = takes(2) returns(0) { // are the parameters already stored in memory?
+// pass in the contract address of the receiver bank account
+#define macro WIRE(to) = takes(1) returns(0) {
     ONLY_OWNER()
-    <to> mstore      // 20 bytes, but not sure if it gets 32 bytes-- like 00000address
+    // need to access msg.value
+    <to> mstore  // smart contract representing the receiver's bank account
 
     push1 0x00 //retSize
     push1 0x00 //retOffset
     push1 0x20 //argsSize
     push1 0x00 //argsOffset
-    push1 0x00 //value
+    // push1 0x00 //value
+    callvalue // pushes value onto the stack
     push20 <to> //dup7 //address
-    push2 0xFFFF //gas
+    push2 0xFFFF // gas- 65,535 units
     call
-    
-    // <zero> 0x20 <zero> <zero> <zero> <zero> <zero> call
-    // 0x00 0x20 0x00 0x00 0x00 0x00 0x00 call
 
-    // Wire(address,address,uint256)
+    // emit wire event
     caller
     0x20 // to- would this be 0x00?
     [WIRE_SIG]
